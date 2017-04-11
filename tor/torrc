@@ -1,0 +1,3 @@
+HiddenServiceDir ./service
+HiddenServicePort 80 127.0.0.1:8080
+SocksListenAddress 127.0.0.1:9051

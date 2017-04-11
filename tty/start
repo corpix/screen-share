@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+set -e
+set +x
+
+self="$(cd "$(dirname "$BASH_SOURCE[0]")" && pwd)"
+cd "$self"
+
+ly() {
+    echo -e "\e[93m$@\e[0m"
+}
+
+user="${TTY_USER:-user}"
+password="${TTY_PASSWORD:-$(dd status=none if=/dev/urandom count=1 bs=8 | sha1sum | awk '{print $1}')}"
+
+echo "Username and password to connect with is $(ly "${user}:${password}")"
+gotty \
+    --credential "${user}:${password}" \
+    --address 127.0.0.1 --port 8080 --reconnect "$@"

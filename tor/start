@@ -1,0 +1,61 @@
+#!/usr/bin/env bash
+set -e
+set +x
+
+self="$(cd "$(dirname "$BASH_SOURCE[0]")" && pwd)"
+cd "$self"
+
+ly() {
+    echo -e "\e[93m$@\e[0m"
+}
+
+if [ "$1" = "-h" ] || [ "$1" = "--help" ]
+then
+    {
+        echo "$0 [-h|--help] [-e]"
+        echo
+        echo "Arguments"
+        echo "    -e  Ephemeral, hidden service private key and hostname will be erased before start"
+        echo
+    } 1>&2
+    exit 1
+fi
+
+ephemeral() {
+    if [ "$1" = "-e" ]
+    then
+        rm -f "$self"/service/hostname || true
+        rm -f "$self"/service/private_key || true
+    fi
+}
+
+start() {
+    ephemeral "$@"
+}
+
+finish() {
+    ephemeral "$@"
+}
+
+start "$@"
+trap "finish $@" EXIT
+
+echo "Starting tor ..."
+echo > "$self"/log
+tor -f "$self"/torrc | tee "$self"/log &
+
+hostname_file="$self"/service/hostname
+while ! grep 'Bootstrapped 100%: Done$' "$self"/log > /dev/null
+do
+    echo "Waiting for tor ..."
+    sleep 2
+done
+
+while [ ! -e "$hostname_file" ]
+do
+    echo "Waiting for hidden service ..."
+    sleep 1
+done
+
+echo "Started hidden service $(ly "$(cat "$hostname_file")")"
+wait
