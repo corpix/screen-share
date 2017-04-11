@@ -17,6 +17,7 @@ For example:
 
 - I don't like bash, but it was written in bash, so this is an issue I may address in the future.
 - It is not feature rich
+- CLI sucks a little-bit
 
 ## Presenter requirements
 
