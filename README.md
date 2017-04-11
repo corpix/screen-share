@@ -16,7 +16,7 @@ This project is a quick blueprint, I may change some things in the future.
 For example:
 
 - I don't like bash, but it was written in bash, so this is an issue I may address in the future.
-- It is not feature rich and don't allow you to replace tmux with something other for eaxmple.
+- It is not feature rich
 
 ## Presenter requirements
 
